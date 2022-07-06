@@ -145,6 +145,8 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 			idef(0x43C, "VRNEXT",   3, 22, True,  "Random-unit next M sequence"),
 			idef(0x43F, "VRXOR",    4, 21, False, "Random-unit XOR R register"),
 			idef(0x3BF, "VWAITQ",   3,  0, False, "Wait Q register"),
+			idef(0x038, "VCALLMS",  3, 24, False, "Start Micro Sub-Routime"),
+			idef(0x039, "VCALLMSR", 3, 0,  False, "Start Micro Sub-Routime by Register"),
 		]
 		
 		self.CFC2_ITABLE_ID  = ida_allins.MIPS_cfc2
@@ -186,6 +188,7 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 			21: [self.CTL_REG, self.VF_REG_WITH_F],
 			22: [self.VF_REG,  self.CTL_REG],
 			23: [self.VF_REG,  self.VF_REG, self.VF_REG_WITH_F2],
+			24: [],
 		}
 
 		self.itable.sort(key=lambda x: x.opcode)
@@ -364,6 +367,14 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 		fsreg = (dword >> 0xB) & 0x1F
 		fdreg = (dword >> 6) & 0x1F
 		self.set_regs_3(insn, fdreg, fsreg, ftreg)
+		
+	def decode_type_24(self, insn, dword):
+	
+		imm = (dword >> 6) & 0x7FFF
+		#imm2 = imm * 8
+		insn.Op1.type = ida_ua.o_imm
+		insn.Op1.dtype = idaapi.dt_word
+		insn.Op1.value = imm
 
 	def set_reg_type(self, op, reg_type):
 		op.specval = reg_type
