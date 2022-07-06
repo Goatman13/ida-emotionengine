@@ -31,10 +31,10 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 			idef(0x028, "VADD",     1,  2, True,  "Addition"),
 			idef(0x022, "VADDi",    1,  3, True,  "ADD broadcast I register"),
 			idef(0x020, "VADDq",    1,  4, True,  "ADD broadcast Q register"),
-			idef(0x000, "VADDx",    0,  2, True,  "ADD broadcast bc field"),
-			idef(0x001, "VADDy",    0,  2, True,  "ADD broadcast bc field"),
-			idef(0x002, "VADDz",    0,  2, True,  "ADD broadcast bc field"),
-			idef(0x003, "VADDw",    0,  2, True,  "ADD broadcast bc field"),
+			idef(0x000, "VADDx",    0,  23, True,  "ADD broadcast bc field"),
+			idef(0x001, "VADDy",    0,  23, True,  "ADD broadcast bc field"),
+			idef(0x002, "VADDz",    0,  23, True,  "ADD broadcast bc field"),
+			idef(0x003, "VADDw",    0,  23, True,  "ADD broadcast bc field"),
 			idef(0x2BC, "VADDA",    3,  5, True,  "ADD output to ACC"),
 			idef(0x23E, "VADDAi",   3,  6, True,  "ADD output to ACC broadcast I register"),
 			idef(0x23C, "VADDAq",   3,  7, True,  "ADD output to ACC broadcast Q register"),
@@ -45,10 +45,10 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 			idef(0x02C, "VSUB",     1,  2, True,  "Subtraction"),
 			idef(0x026, "VSUBi",    1,  3, True,  "SUB broadcast I register"),
 			idef(0x024, "VSUBq",    1,  4, True,  "SUB broadcast Q register"),
-			idef(0x004, "VSUBx",    0,  2, True,  "SUB broadcast bc field"),
-			idef(0x005, "VSUBy",    0,  2, True,  "SUB broadcast bc field"),
-			idef(0x006, "VSUBz",    0,  2, True,  "SUB broadcast bc field"),
-			idef(0x007, "VSUBw",    0,  2, True,  "SUB broadcast bc field"),
+			idef(0x004, "VSUBx",    0,  23, True,  "SUB broadcast bc field"),
+			idef(0x005, "VSUBy",    0,  23, True,  "SUB broadcast bc field"),
+			idef(0x006, "VSUBz",    0,  23, True,  "SUB broadcast bc field"),
+			idef(0x007, "VSUBw",    0,  23, True,  "SUB broadcast bc field"),
 			idef(0x2FC, "VSUBA",    3,  5, True,  "SUB output to ACC"),
 			idef(0x27E, "VSUBAi",   3,  6, True,  "SUB output to ACC broadcast I register"),
 			idef(0x27C, "VSUBAq",   3,  7, True,  "SUB output to ACC broadcast Q register"),
@@ -59,10 +59,10 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 			idef(0x02A, "VMUL",     1,  2, True,  "Multiply"),
 			idef(0x01E, "VMULi",    1,  3, True,  "MUL broadcast I register"),
 			idef(0x01C, "VMULq",    1,  4, True,  "MUL broadcast Q register"),
-			idef(0x018, "VMULx",    0,  2, True,  "MUL broadcast bc field"),
-			idef(0x019, "VMULy",    0,  2, True,  "MUL broadcast bc field"),
-			idef(0x01A, "VMULz",    0,  2, True,  "MUL broadcast bc field"),
-			idef(0x01B, "VMULw",    0,  2, True,  "MUL broadcast bc field"),
+			idef(0x018, "VMULx",    0,  23, True,  "MUL broadcast bc field"),
+			idef(0x019, "VMULy",    0,  23, True,  "MUL broadcast bc field"),
+			idef(0x01A, "VMULz",    0,  23, True,  "MUL broadcast bc field"),
+			idef(0x01B, "VMULw",    0,  23, True,  "MUL broadcast bc field"),
 			idef(0x2BE, "VMULA",    3,  5, True,  "MUL output to ACC"),
 			idef(0x1FE, "VMULAi",   3,  6, True,  "MUL output to ACC broadcast I register"),
 			idef(0x1FC, "VMULAq",   3,  7, True,  "MUL output to ACC broadcast Q register"),
@@ -73,10 +73,10 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 			idef(0x029, "VMADD",    1,  2, True,  "MUL and ADD"),
 			idef(0x023, "VMADDi",   1,  3, True,  "MUL and ADD broadcast I register"),
 			idef(0x021, "VMADDq",   1,  4, True,  "MUL and ADD broadcast Q register"),
-			idef(0x008, "VMADDx",   0,  2, True,  "MUL and ADD broadcast bc field"),
-			idef(0x009, "VMADDy",   0,  2, True,  "MUL and ADD broadcast bc field"),
-			idef(0x00A, "VMADDz",   0,  2, True,  "MUL and ADD broadcast bc field"),
-			idef(0x00B, "VMADDw",   0,  2, True,  "MUL and ADD broadcast bc field"),
+			idef(0x008, "VMADDx",   0,  23, True,  "MUL and ADD broadcast bc field"),
+			idef(0x009, "VMADDy",   0,  23, True,  "MUL and ADD broadcast bc field"),
+			idef(0x00A, "VMADDz",   0,  23, True,  "MUL and ADD broadcast bc field"),
+			idef(0x00B, "VMADDw",   0,  23, True,  "MUL and ADD broadcast bc field"),
 			idef(0x2BD, "VMADDA",   3,  5, True,  "MUL and ADD output to ACC"),
 			idef(0x23F, "VMADDAi",  3,  6, True,  "MUL and ADD output to ACC broadcast I register"),
 			idef(0x23D, "VMADDAq",  3,  7, True,  "MUL and ADD output to ACC broadcast Q register"),
@@ -87,10 +87,10 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 			idef(0x02D, "VMSUB",    1,  2, True,  "MUL and SUB"),
 			idef(0x027, "VMSUBi",   1,  3, True,  "MUL and SUB broadcast I register"),
 			idef(0x025, "VMSUBq",   1,  4, True,  "MUL and SUB broadcast Q register"),
-			idef(0x00C, "VMSUBx",   0,  2, True,  "MUL and SUB broadcast bc field"),
-			idef(0x00D, "VMSUBy",   0,  2, True,  "MUL and SUB broadcast bc field"),
-			idef(0x00E, "VMSUBz",   0,  2, True,  "MUL and SUB broadcast bc field"),
-			idef(0x00F, "VMSUBw",   0,  2, True,  "MUL and SUB broadcast bc field"),
+			idef(0x00C, "VMSUBx",   0,  23, True,  "MUL and SUB broadcast bc field"),
+			idef(0x00D, "VMSUBy",   0,  23, True,  "MUL and SUB broadcast bc field"),
+			idef(0x00E, "VMSUBz",   0,  23, True,  "MUL and SUB broadcast bc field"),
+			idef(0x00F, "VMSUBw",   0,  23, True,  "MUL and SUB broadcast bc field"),
 			idef(0x2FD, "VMSUBA",   3,  5, True,  "MUL and SUB output to ACC"),
 			idef(0x27F, "VMSUBAi",  3,  6, True,  "MUL and SUB output to ACC broadcast I register"),
 			idef(0x27D, "VMSUBAq",  3,  7, True,  "MUL and SUB output to ACC broadcast Q register"),
@@ -100,16 +100,16 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 			idef(0x0FF, "VMSUBAw",  2,  8, True,  "MUL and SUB output to ACC broadcast bc field"),
 			idef(0x02B, "VMAX",     1,  2, True,  "Maximum"),
 			idef(0x01D, "VMAXi",    1,  3, True,  "Maximum broadcast I register"),
-			idef(0x010, "VMAXx",    0,  2, True,  "Maximum broadcast bc field"),
-			idef(0x011, "VMAXy",    0,  2, True,  "Maximum broadcast bc field"),
-			idef(0x012, "VMAXz",    0,  2, True,  "Maximum broadcast bc field"),
-			idef(0x013, "VMAXw",    0,  2, True,  "Maximum broadcast bc field"),
+			idef(0x010, "VMAXx",    0,  23, True,  "Maximum broadcast bc field"),
+			idef(0x011, "VMAXy",    0,  23, True,  "Maximum broadcast bc field"),
+			idef(0x012, "VMAXz",    0,  23, True,  "Maximum broadcast bc field"),
+			idef(0x013, "VMAXw",    0,  23, True,  "Maximum broadcast bc field"),
 			idef(0x02F, "VMINI",    1,  2, True,  "Minimum"),
 			idef(0x01F, "VMINIi",   1,  3, True,  "Minimum broadcast I register"),
-			idef(0x014, "VMINIx",   0,  2, True,  "Minimum broadcast bc field"),
-			idef(0x015, "VMINIy",   0,  2, True,  "Minimum broadcast bc field"),
-			idef(0x016, "VMINIz",   0,  2, True,  "Minimum broadcast bc field"),
-			idef(0x017, "VMINIw",   0,  2, True,  "Minimum broadcast bc field"),
+			idef(0x014, "VMINIx",   0,  23, True,  "Minimum broadcast bc field"),
+			idef(0x015, "VMINIy",   0,  23, True,  "Minimum broadcast bc field"),
+			idef(0x016, "VMINIz",   0,  23, True,  "Minimum broadcast bc field"),
+			idef(0x017, "VMINIw",   0,  23, True,  "Minimum broadcast bc field"),
 			idef(0x2FE, "VOPMULA",  3,  9, False, "Outer product MULA"),
 			idef(0x02E, "VOPMSUB",  1, 10, False, "Outer product MSUB"),
 			idef(0x2FF, "VNOP",     3,  0, False, "No operation"),
@@ -157,7 +157,9 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 		self.VF_REG = 0
 		self.VI_REG = 1
 		self.VF_REG_WITH_F = 2
-		self.CTL_REG = 3
+		self.VF_REG_WITH_F2 = 3
+		self.CTL_REG = 4
+		self.CTL_ACC = 5
 
 		self.reg_types = {
 			0:  [],
@@ -165,11 +167,11 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 			2:  [self.VF_REG,  self.VF_REG, self.VF_REG],
 			3:  [self.VF_REG,  self.VF_REG, self.CTL_REG],
 			4:  [self.VF_REG,  self.VF_REG, self.CTL_REG],
-			5:  [self.CTL_REG, self.VF_REG, self.VF_REG],
-			6:  [self.CTL_REG, self.VF_REG, self.CTL_REG],
-			7:  [self.CTL_REG, self.VF_REG, self.CTL_REG],
-			8:  [self.CTL_REG, self.VF_REG, self.VF_REG],
-			9:  [self.CTL_REG, self.VF_REG, self.VF_REG],
+			5:  [self.CTL_ACC, self.VF_REG, self.VF_REG],
+			6:  [self.CTL_ACC, self.VF_REG, self.CTL_REG],
+			7:  [self.CTL_ACC, self.VF_REG, self.CTL_REG],
+			8:  [self.CTL_ACC, self.VF_REG, self.VF_REG_WITH_F2],
+			9:  [self.CTL_ACC, self.VF_REG, self.VF_REG],
 			10: [self.VF_REG,  self.VF_REG, self.VF_REG],
 			11: [self.VF_REG,  self.VF_REG],
 			12: [self.CTL_REG, self.VF_REG_WITH_F, self.VF_REG_WITH_F],
@@ -183,6 +185,7 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 			20: [self.VI_REG,  self.VI_REG],
 			21: [self.CTL_REG, self.VF_REG_WITH_F],
 			22: [self.VF_REG,  self.CTL_REG],
+			23: [self.VF_REG,  self.VF_REG, self.VF_REG_WITH_F2],
 		}
 
 		self.itable.sort(key=lambda x: x.opcode)
@@ -224,8 +227,8 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 		insn.Op3.type = ida_ua.o_idpspec1
 		insn.Op3.reg = c
 
-	def decode_type_0(self, insn):
-		insn.Op1.type = o_void
+	def decode_type_0(self, insn, dword):
+		insn.Op1.type = ida_ua.o_void
 
 	def decode_type_1(self, insn, dword):
 		ftreg = (dword >> 0x10) & 0x1F
@@ -356,6 +359,12 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 		fsreg = (dword >> 0xB) & 0x1F
 		self.set_regs_2(insn, ftreg, ord('R'))	
 
+	def decode_type_23(self, insn, dword):
+		ftreg = (dword >> 0x10) & 0x1F
+		fsreg = (dword >> 0xB) & 0x1F
+		fdreg = (dword >> 6) & 0x1F
+		self.set_regs_3(insn, fdreg, fsreg, ftreg)
+
 	def set_reg_type(self, op, reg_type):
 		op.specval = reg_type
 
@@ -420,24 +429,28 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 	#		return self.itable[insn.itype-ITYPE_START].cmt
 	#	return 0
 
-	def ev_emu_insn(self, insn):
-		if (insn.itype >= ITYPE_START and insn.itype < ITYPE_START + len(self.itable)):
-			return 1
-		return 0
+	#def ev_emu_insn(self, insn):
+	#	if (insn.itype >= ITYPE_START and insn.itype < ITYPE_START + len(self.itable)):
+	#		return 1
+	#	return 0
 
 	def decode_reg_field(self, val):
 		return ["x", "y", "z", "w"][val]
 
-	def get_register(self, op):
+	def get_register(self, op, ctx):
 
 		if (op.specval == self.VF_REG):
-			return "$vf%d" % op.reg
+			return "vf%d" % op.reg
 		elif (op.specval == self.VI_REG):
-			return "$vi%d" % op.reg
+			return "vi%d" % op.reg
 		elif (op.specval == self.VF_REG_WITH_F):
-			return "$vf%d.%s" % (op.reg & 0xFF, self.decode_reg_field(op.reg >> 8))
+			return "vf%d.%s" % (op.reg & 0xFF, self.decode_reg_field(op.reg >> 8))
+		elif (op.specval == self.VF_REG_WITH_F2):
+			return "vf%d%s" % (op.reg & 0xFF, self.decode_reg_field((ida_bytes.get_wide_dword(ctx.insn.ea)) & 3))
 		elif (op.specval == self.CTL_REG):
-			return "$%c" % op.reg
+			return "%c" % op.reg
+		elif (op.specval == self.CTL_ACC):
+			return "ACC"
 		else:
 			return "UNK"
 
@@ -447,19 +460,19 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 
 			# First we need to fix instructions (badly) disassembled by mips.dll
 			if (ctx.insn.itype == self.CFC2_ITABLE_ID and op.n == 1):
-				ctx.out_register("$vi%d" % op.reg)
+				ctx.out_register("vi%d" % op.reg)
 			elif (ctx.insn.itype == self.CTC2_ITABLE_ID and op.n == 1):
-				ctx.out_register("$vi%d" % op.reg)
+				ctx.out_register("vi%d" % op.reg)
 			elif (ctx.insn.itype == self.QMFC2_ITABLE_ID and op.n == 1):
-				ctx.out_register("$vf%d" % op.reg)
+				ctx.out_register("vf%d" % op.reg)
 			elif (ctx.insn.itype == self.QMTC2_ITABLE_ID and op.n == 1):
-				ctx.out_register("$vf%d" % op.reg)
+				ctx.out_register("vf%d" % op.reg)
 			elif (ctx.insn.itype == self.LQC2_ITABLE_ID and op.n == 0):
-				ctx.out_register("$vf%d" % op.reg)
+				ctx.out_register("vf%d" % op.reg)
 			elif (ctx.insn.itype == self.SQC2_ITABLE_ID and op.n == 0):
-				ctx.out_register("$vf%d" % op.reg)
+				ctx.out_register("vf%d" % op.reg)
 			elif (ctx.insn.itype >= ITYPE_START and ctx.insn.itype < ITYPE_START + len(self.itable)):
-				ctx.out_register(self.get_register(op))
+				ctx.out_register(self.get_register(op, ctx))
 			else:
 				return 0
 
@@ -487,10 +500,10 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 		if (ctx.insn.itype >= ITYPE_START and ctx.insn.itype < ITYPE_START + len(self.itable)):
 
 			dest = ""
-			if (self.itable[ctx.insn.itype-ITYPE_START].dest):
+			if (self.itable[ctx.insn.itype - ITYPE_START].dest):
 				dest = self.decode_dest(ida_bytes.get_wide_dword(ctx.insn.ea))
 
-			ctx.out_custom_mnem(self.itable[ctx.insn.itype-ITYPE_START].name, MNEM_WIDTH, dest)
+			ctx.out_custom_mnem(self.itable[ctx.insn.itype - ITYPE_START].name, MNEM_WIDTH, dest)
 			return 1
 
 		# We do this to fix width of other instructions
