@@ -440,10 +440,11 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 	#		return self.itable[insn.itype-ITYPE_START].cmt
 	#	return 0
 
-	#def ev_emu_insn(self, insn):
-	#	if (insn.itype >= ITYPE_START and insn.itype < ITYPE_START + len(self.itable)):
-	#		return 1
-	#	return 0
+	def ev_emu_insn(self, insn):
+		if (insn.itype >= ITYPE_START and insn.itype < ITYPE_START + len(self.itable)):
+			insn.add_cref(insn.ea + insn.size, 0, 21); # 21 Ordinary flow
+			return 1
+		return 0
 
 	def decode_reg_field(self, val):
 		return ["x", "y", "z", "w"][val]
