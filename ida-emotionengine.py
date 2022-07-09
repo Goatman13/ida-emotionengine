@@ -325,7 +325,7 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 		insn.Op1.reg = ftreg
 		insn.Op2.type = ida_ua.o_idpspec1
 		insn.Op2.reg = fsreg
-		insn.Op3.type = o_imm
+		insn.Op3.type = ida_ua.o_imm
 		insn.Op3.value = imm
 
 	def decode_type_16(self, insn, dword):
