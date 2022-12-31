@@ -394,6 +394,9 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 		insn.Op1.type = ida_ua.o_imm
 		insn.Op1.dtype = idaapi.dt_word
 		insn.Op1.value = imm
+		insn.Op2.type = ida_ua.o_imm
+		insn.Op2.dtype = idaapi.dt_word
+		insn.Op2.value = imm << 3
 
 	def set_reg_type(self, op, reg_type):
 		op.specval = reg_type
