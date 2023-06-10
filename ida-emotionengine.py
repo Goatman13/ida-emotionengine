@@ -519,6 +519,15 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 
 	def ev_out_operand(self, ctx, op):
 
+		if (op.type == ida_ua.o_imm):
+			if (ctx.insn.itype == self.CFC2_ITABLE_ID
+				or ctx.insn.itype == self.CTC2_ITABLE_ID
+				or ctx.insn.itype == self.QMFC2_ITABLE_ID
+				or ctx.insn.itype == self.QMTC2_ITABLE_ID):
+				if op.n == 2:
+					op.type = ida_ua.o_idpspec4
+					ctx.out_register("interlocked")
+				
 		if (op.type == ida_ua.o_idpspec1):
 
 			# First we need to fix instructions (badly) disassembled by mips.dll
