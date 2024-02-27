@@ -163,6 +163,8 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 		self.VF_REG_WITH_F2 = 5
 		self.CTL_REG = 6
 		self.CTL_ACC = 7
+		self.VCALLMS = 8
+		self.AUTOCMT = 9
 
 		self.reg_types = {
 			0:  [],
@@ -390,12 +392,9 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 	def decode_type_27(self, insn, dword):
 	
 		imm = (dword >> 6) & 0x7FFF
-		insn.Op1.type = ida_ua.o_imm
-		insn.Op1.dtype = idaapi.dt_word
+		insn.Op1.type = ida_ua.o_void
 		insn.Op1.value = imm
-		insn.Op2.type = ida_ua.o_imm
-		insn.Op2.dtype = idaapi.dt_word
-		insn.Op2.value = imm << 3
+		insn.Op1.specval = 8
 
 	def set_reg_type(self, op, reg_type):
 		op.specval = reg_type
@@ -518,6 +517,15 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 
 	def ev_out_operand(self, ctx, op):
 
+		if (op.specval == self.VCALLMS):
+			ctx.out_line("0x%X " % (op.value), 31)
+			ctx.out_line("# VU0 address: 0x%X" % (op.value << 3), 4)
+			return 1
+		
+		#if (ida_ida.show_all_comments() and (op.specval == self.AUTOCMT)):
+		#	ctx.out_line(" # ", 4);
+		#	ctx.out_line(self.itable[ctx.insn.itype-ITYPE_START].cmt, 4);
+		
 		if (op.type == ida_ua.o_idpspec1):
 
 			# First we need to fix instructions (badly) disassembled by mips.dll
