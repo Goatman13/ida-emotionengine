@@ -7,6 +7,7 @@ import ida_allins
 import ida_idp
 import ida_bytes
 import ida_ua
+import idc
 
 ITYPE_START = ida_idp.CUSTOM_INSN_ITYPE + 0x100
 MNEM_WIDTH = 13
@@ -165,6 +166,11 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 		self.CTL_ACC = 7
 		self.VCALLMS = 8
 		self.AUTOCMT = 9
+		self.BC0F = 0x100
+		self.BC0T = 0x101
+		self.BC0FL = 0x102
+		self.BC0TL = 0x103
+		self.CACHE = 0x200
 
 		self.reg_types = {
 			0:  [],
@@ -396,6 +402,35 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 		insn.Op1.value = imm
 		insn.Op1.specval = 8
 
+	def decode_type_bc0(self, insn, dword):
+	
+		displ = dword & 0xFFFF
+		if (displ > 0x7FFF):
+			displ = ~displ
+			displ &= 0xFFFF
+			displ <<= 2
+			target = insn.ea - displ
+		else:
+			displ <<= 2
+			displ &= 0xFFFF
+			target = insn.ea + displ + 4
+
+		insn.Op1.type = ida_ua.o_near
+		insn.Op1.addr = target
+		insn.Op1.specval = (dword >> 16) & 3
+		insn.Op1.specval += 0x100
+		insn.size = 4
+
+	def decode_type_cache(self, insn, dword):
+		insn.Op1.type = ida_ua.o_void
+		insn.Op1.value = (dword >>16) & 0x1F
+		insn.Op1.specval = self.CACHE
+		insn.Op2.type = ida_ua.o_displ
+		insn.Op2.displ = dword & 0xFFFF # Todo: Is that normal int16 displ or what?
+		insn.Op2.reg = (dword >> 21) & 0x1F
+		insn.size = 4
+
+
 	def set_reg_type(self, op, reg_type):
 		op.specval = reg_type
 
@@ -453,6 +488,12 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 
 			self.decode_instruction(index, insn, dword)
 
+		elif (dword >> 21 == 0x208):
+			self.decode_type_bc0(insn, dword)
+		elif (dword >> 26 == 0x2F):
+			self.decode_type_cache(insn, dword)
+		else:
+			return 0
 		return insn.size
 
 	#def ev_get_autocmt(self, insn):
@@ -461,13 +502,36 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 	#	return 0
 
 	def ev_emu_insn(self, insn):
+		
+		# Required for every single COP2 instruction.
 		if (insn.itype >= ITYPE_START and insn.itype < ITYPE_START + len(self.itable)):
-			insn.add_cref(insn.ea + insn.size, 0, 21); # 21 Ordinary flow
+			insn.add_cref(insn.ea + 4, insn.ea, 21); # 21 Ordinary flow
 			return 1
+		
+		# Fix BC0 flow.
+		elif (insn.Op1.specval & 0xF00 == 0x100):
+			insn.add_cref(insn.ea + 4, insn.ea, 21);
+			insn.add_cref(insn.Op1.addr, insn.ea, 19);
+			#ida_idp.delay_slot_insn(insn.ea+4, 1, 1)
+			return 1
+
 		return 0
 
 	def decode_reg_field(self, val):
+
 		return ["x", "y", "z", "w"][val]
+
+	def get_bc0_type(self, bc0_type):
+	
+		bc0_type -= 0x100
+		if bc0_type == 0:
+			return "bc0f"
+		elif bc0_type == 1:
+			return "bc0t"
+		elif bc0_type == 2:
+			return "bc0fl"
+		else:
+			return "bc0tl"
 
 	def get_register(self, op, ctx):
 
@@ -515,18 +579,41 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 		else:
 			return "UNK"
 
+	def get_cache_function(self, op):
+		if   (op.value == 0x00): return "ixltg"
+		elif (op.value == 0x01): return "ixldt"
+		elif (op.value == 0x02): return "bxlbt"
+		elif (op.value == 0x04): return "ixstg"
+		elif (op.value == 0x05): return "ixsdt"
+		elif (op.value == 0x06): return "bxsbt"
+		elif (op.value == 0x07): return "ixin"
+		elif (op.value == 0x0A): return "bhinbt"
+		elif (op.value == 0x0B): return "ihin"
+		elif (op.value == 0x0C): return "bfh"
+		elif (op.value == 0x0E): return "ifl"
+		elif (op.value == 0x10): return "dxltg"
+		elif (op.value == 0x11): return "dxldt"
+		elif (op.value == 0x12): return "dxstg"
+		elif (op.value == 0x13): return "dxsdt"
+		elif (op.value == 0x14): return "dxwbin"
+		elif (op.value == 0x16): return "dxin"
+		elif (op.value == 0x18): return "dhwbin"
+		elif (op.value == 0x1A): return "dhin"
+		elif (op.value == 0x1C): return "dhwoin"
+		else: return "UNKNOWN"
+
 	def ev_out_operand(self, ctx, op):
 
 		if (op.specval == self.VCALLMS):
 			ctx.out_line("0x%X " % (op.value), 31)
 			ctx.out_line("# VU0 address: 0x%X" % (op.value << 3), 4)
 			return 1
-		
-		#if (ida_ida.show_all_comments() and (op.specval == self.AUTOCMT)):
-		#	ctx.out_line(" # ", 4);
-		#	ctx.out_line(self.itable[ctx.insn.itype-ITYPE_START].cmt, 4);
-		
-		if (op.type == ida_ua.o_idpspec1):
+
+		elif (op.specval == self.CACHE):
+			ctx.out_register(self.get_cache_function(op))
+			return 1
+
+		elif (op.type == ida_ua.o_idpspec1):
 
 			# First we need to fix instructions (badly) disassembled by mips.dll
 			if (ctx.insn.itype == self.CFC2_ITABLE_ID and op.n == 1):
@@ -547,7 +634,6 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 				ctx.out_register(self.get_register(op, ctx))
 			else:
 				return 0
-
 			return 1
 
 		return 0
@@ -567,24 +653,66 @@ class COP2_disassemble(idaapi.IDP_Hooks):
 			s += "w"
 
 		return s
+		
+	def get_cache_comment(self, op):
+		if   (op.value == 0x00): return "Read tag from specified icache entry to TagLo"
+		elif (op.value == 0x01): return "Read data from specified icache entry to TagLo, and steering bits and BHT to TagHi"
+		elif (op.value == 0x02): return "Read BTACache entry. FetchAddr to TagLo TargetAddr to TagHi"
+		elif (op.value == 0x04): return "Write tag from TagLo to specified icache entry"
+		elif (op.value == 0x05): return "Write instruction from TagLo to specified icache entry, also write steering bits from TagHi"
+		elif (op.value == 0x06): return "Write TagLo to FetchAddr and TagHi to TargetAddr of BTACache entry"
+		elif (op.value == 0x07): return "Invalidate specified icache index entry"
+		elif (op.value == 0x0A): return "Partially invalidate BTACache"
+		elif (op.value == 0x0B): return "Invalidate specified icache entry"
+		elif (op.value == 0x0C): return "Invalidates all BTACache entries"
+		elif (op.value == 0x0E): return "Read data from memory into specified icache entry"
+		elif (op.value == 0x10): return "Read specified dcache tag entry to TagLo"
+		elif (op.value == 0x11): return "Read data from specified dcache entry to TagLo"
+		elif (op.value == 0x12): return "Write tag from TagLo to specified dcache entry"
+		elif (op.value == 0x13): return "Write data from TagLo to specified dcache entry"
+		elif (op.value == 0x14): return "Write specified dcache entry back to memory and invalidate index"
+		elif (op.value == 0x16): return "Invalidate specified dcache index entry"
+		elif (op.value == 0x18): return "Write specified dcache entry back to memory and invalidate it"
+		elif (op.value == 0x1A): return "Invalidate specified dcache entry"
+		elif (op.value == 0x1C): return "Write dcache entry back to memory, don't invalidate"
+		else: return "UNKNOWN"
 
 	def ev_out_mnem(self, ctx):
-			
-		if (ctx.insn.itype == self.CFC2_ITABLE_ID
-			or ctx.insn.itype == self.CTC2_ITABLE_ID
-			or ctx.insn.itype == self.QMFC2_ITABLE_ID
-			or ctx.insn.itype == self.QMTC2_ITABLE_ID):
-			ctx.insn.Op3.clr_shown()
+		
+		# Fix interlock for CTX2/QMTX2.
+		if (ctx.insn.itype in [self.CFC2_ITABLE_ID, self.CTC2_ITABLE_ID, self.QMFC2_ITABLE_ID, self.QMTC2_ITABLE_ID]):
 			if (ctx.insn.Op3.value == 1):
+				ctx.insn.Op3.clr_shown()
 				ctx.out_mnem(MNEM_WIDTH, ".i")
 				return 1		
-				
-		if (ctx.insn.itype >= ITYPE_START and ctx.insn.itype < ITYPE_START + len(self.itable)):
 
+		# Fix SYNC stype.		
+		if (ctx.insn.itype == ida_allins.MIPS_sync):
+			if (ctx.insn.Op1.value & 0x10 == 0x10):
+				ctx.out_mnem(MNEM_WIDTH, ".p")
+			else:
+				ctx.out_mnem(MNEM_WIDTH, "")
+			ctx.insn.Op1.clr_shown()
+			return 1
+
+		# Fix BC0 opcodes.
+		elif (ctx.insn.Op1.specval & 0xF00 == 0x100):
+			ctx.out_custom_mnem(self.get_bc0_type(ctx.insn.Op1.specval), MNEM_WIDTH, "")
+			return 1
+
+		# Fix CACHE opcodes.
+		elif (ctx.insn.Op1.specval == self.CACHE):
+			#ctx.out_custom_mnem("cache." + self.get_cache_function(ctx.insn.Op1), MNEM_WIDTH, "")
+			ctx.out_custom_mnem("cache", MNEM_WIDTH, "")
+			if idc.get_cmt(ctx.insn.ea, 0) == None:
+				idc.set_cmt(ctx.insn.ea, self.get_cache_comment(ctx.insn.Op1), 0)
+			return 1
+
+		# Fix COP2 opcodes.
+		elif (ctx.insn.itype >= ITYPE_START and ctx.insn.itype < ITYPE_START + len(self.itable)):
 			dest = ""
 			if (self.itable[ctx.insn.itype - ITYPE_START].dest):
 				dest = self.decode_dest(ida_bytes.get_wide_dword(ctx.insn.ea))
-
 			ctx.out_custom_mnem(self.itable[ctx.insn.itype - ITYPE_START].name, MNEM_WIDTH, dest)
 			return 1
 
